@@ -1,35 +1,55 @@
 import random
-from temp2 import *
+from log_desc import *
 
-types, fanins, input_values, outputs = readfile("small.bench")
+fname = raw_input("Enter the bench file name with extension: ")
+types, fanins, input_values, outputs = readfile(fname)
 
 lk = []
-z = []
 k = 0
 y = []
 key = []
 
 ran_gat = random.sample(types.keys(),random.randint(1,len(types)))
-print(ran_gat)
-print(fanins)
-for x in range(1,20):
-	lk = lk + [random.randint(0,1)]
 
 for i in ran_gat:
 	y = fanins[i]
-	z = 'enc'+str(k)
-	fanins.update({z:y})
+	kgat = 'enc'+str(k)
+	kin = 'keyinput'+str(k)
+	types.update({kin:'input'})
+	fanins.update({kgat:y})
 	del fanins[i]
-	fanins.update({i:[z,e_k]})
-	types.update({e_k:'input'})
-	if lk[x] == 0 :
-		types.update({z:'xor'})
+	fanins.update({i:[kgat,kin]})
+	if random.randint(0,1) :
+		types.update({i:'xor'})
+		types.update({kgat:'input'})
 		key = key + [0]
 	else :
-		types.update({z:'xnor'})
+		types.update({i:'xnor'})
+		types.update({kgat:'input'})
 		key = key + [1]
 	k = k + 1
 
-print('types: ',types)
-print('outputs: ',outputs)
-print(key)
+f = open("smallenc.bench","w+")
+
+for i in types:
+	if types[i] == 'input':
+		f.write("INPUT(%s)\n"%i)
+
+for i in outputs:
+	f.write("OUTPUTS(%s)\n"%i)
+
+for i in fanins:
+	if types[i] != 'input':
+		f.write("%s=%s("%(i,types[i]))
+		z = ''
+		for i in fanins[i]:
+			z = z + i + ','
+		z = z[:-1]
+		print z
+		f.write(z)
+		f.write(")\n")
+
+print 'Random gates: ', ran_gat, '\n'
+print 'Types: ', types, '\n'
+print 'Fanins', fanins, '\n'
+print 'Keys: ', key
