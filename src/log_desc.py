@@ -83,7 +83,7 @@ if __name__ == "__main__":
 	for i in range(len(_z)):
 		_inp = _inp + [int(_z[i])]
 
-	types, fanins, _input_values, outputs = readfile(_fil)
+	types, fanins, _input_values, outputs, seq = readfile(_fil)
 
 	for i in range(len(outputs)):
 		print(outputs[i]+' = '+str(simulate(types, fanins, _input_values, outputs[i]))+'\n')
