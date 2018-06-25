@@ -15,6 +15,7 @@ ran_gat = random.sample(types.keys(),random.randint(1,len(types)))
 
 for i in ran_gat:
 	y = fanins[i]
+
 	t = types[i]
 	kgat = 'enc'+str(k)
 	kin = 'keyinput'+str(k)
