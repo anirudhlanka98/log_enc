@@ -10,7 +10,6 @@ k = 0
 count = 0
 y = []
 key = []
-lis = []
 
 ran_gat = random.sample(types.keys(),int(0.1*len(types)))
 
@@ -44,7 +43,14 @@ while count < 0.1*len(types):
 	
 	k = k + 1
 
-f = open("smallenc.bench","w+")
+encname = fname.replace(".bench","_enc.bench")
+
+f = open(encname,"w+")
+
+f.write("#Key = ")
+for i in key:
+	f.write("%s"%i)
+f.write("\n\n")
 
 for i in sorted(seq.keys()):
 	f.write("INPUT(%s)\n"%seq[i])
