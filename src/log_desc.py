@@ -3,6 +3,7 @@ def readfile(filename):
 	types = {}
 	fanins = {}
 	outputs = []
+	seq = {}
 	_input_values = {}
 	f = []
 	i = 0
@@ -12,7 +13,10 @@ def readfile(filename):
 	    if 'INPUT' in x:
 			y = x.replace("INPUT(", "").replace(")", "").replace("\n", "")
 			types.update({y:'input'})
-			_input_values.update({y:_inp[i]})
+			fanins.update({y:[]})
+			seq.update({i:y})
+			if __name__ == "__main__" :	
+				_input_values.update({y:_inp[i]})
 			i = i + 1
 
 	    elif 'OUTPUT' in x:
@@ -26,7 +30,7 @@ def readfile(filename):
 	    	within_br = parts[1][parts[1].find('(')+1:parts[1].find(')')]
 	    	f = [p.strip() for p in within_br.split(',')]
 	    	fanins.update({parts[0]:f})
-	return types, fanins, _input_values, outputs
+	return types, fanins, _input_values, outputs, seq
 
 if __name__ == "__main__":
 	def simulate(types, fanins, input_values, n):
