@@ -37,42 +37,45 @@ if __name__ == "__main__":
 		if(types[n] == 'input'):
 			return _input_values[n]
 
-		elif(types[n] == 'and'):
+		elif(types[n] == 'and' or types[n] == 'AND'):
 			f = fanins[n]
 			res = []
 			for i in range(len(f)):
 				res.append(simulate(types, fanins, _input_values, f[i]))
 			return all(res)
 
-		elif(types[n] == 'or'):
+		elif(types[n] == 'or' or types[n] == 'OR'):
 			f = fanins[n]
 			res = []
 			for i in range(len(f)):
 				res.append(simulate(types, fanins, _input_values, f[i]))
 			return any(res)
 
-		elif(types[n] == 'not'):
+		elif(types[n] == 'not' or types[n] == 'NOT'):
 			return not(simulate(types, fanins, _input_values, fanins[n][0]))
 
-		elif(types[n] == 'nand'):
+		elif(types[n] == 'buf' or types[n] == 'BUF'):
+			return simulate(types, fanins, _input_values, fanins[n][0])
+
+		elif(types[n] == 'nand' or types[n] == 'NAND'):
 			f = fanins[n]
 			res = []
 			for i in range(len(f)):
 				res.append(simulate(types, fanins, _input_values, f[i]))
 			return not(all((res)))
 
-		elif(types[n] == 'nor'):
+		elif(types[n] == 'nor' or types[n] == 'NOR'):
 			f = fanins[n]
 			res = []
 			for i in range(len(f)):
 				res.append(simulate(types, fanins, _input_values, f[i]))
 			return not(any((res)))
 
-		elif(types[n] == 'xor'):
+		elif(types[n] == 'xor' or types[n] == 'XOR'):
 			f = fanins[n]
 			return reduce(lambda i, j: simulate(types, fanins, _input_values, i) ^ simulate(types, fanins, _input_values, j), f)
 
-		elif(types[n] == 'xnor'):
+		elif(types[n] == 'XNOR' or types[n] == 'XNOR'):
 			f = fanins[n]
 			return not(reduce(lambda i, j: simulate(types, fanins, _input_values, i) ^ simulate(types, fanins, _input_values, j), f))
 	
