@@ -20,7 +20,7 @@ GAT4 = and(GAT1,GAT2)
 GAT5 = and(GAT3,GAT4)
 GAT6 = not(GAT5)
 
-SGAT1 = and(A,nB,NC,nD)
+SGAT1 = and(A,nB,nC,nD)
 KGAT1 = xnor(A,K0)
 KGAT2 = xnor(B,K1)
 KGAT3 = xnor(C,K2)
