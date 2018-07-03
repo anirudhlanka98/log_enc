@@ -1,21 +1,25 @@
-#Key = 001
+#Key = 010
 
 INPUT(0)
 INPUT(1)
 INPUT(2)
+
 INPUT(keyinput0)
 INPUT(keyinput1)
 INPUT(keyinput2)
+
 OUTPUT(11)
-11 = xor(UGAT, XGAT)
+OUTPUT(ZGAT)
+
+2bar = not(2)
 11new = NOR(0, 4)
 0bar = not(0)
 XGAT = and(SGAT0, SGAT1, SGAT2)
 SGAT2 = xnor(2, keyinput2)
 SGAT0 = xnor(0, keyinput0)
 SGAT1 = xnor(1, keyinput1)
-ZGAT = and(0bar, 1bar, 2)
-1bar = not(1)
+ZGAT = and(0bar, 1, 2bar)
+11 = xor(UGAT, XGAT)
 10 = XOR(2, 9)
 12 = NOR(5, 4)
 UGAT = xor(11new, ZGAT)

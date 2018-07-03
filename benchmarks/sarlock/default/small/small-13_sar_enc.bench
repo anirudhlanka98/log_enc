@@ -3,11 +3,15 @@
 INPUT(0)
 INPUT(1)
 INPUT(2)
+
 INPUT(keyinput0)
 INPUT(keyinput1)
 INPUT(keyinput2)
+
 OUTPUT(13)
 OUTPUT(14)
+OUTPUT(ZGAT)
+
 1bar = not(1)
 0bar = not(0)
 XGAT = and(SGAT0, SGAT1, SGAT2)

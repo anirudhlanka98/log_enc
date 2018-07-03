@@ -1,12 +1,17 @@
-#Key = 10
+#Key = 00
 
 INPUT(0)
 INPUT(1)
+
 INPUT(keyinput0)
 INPUT(keyinput1)
+
 OUTPUT(9)
+OUTPUT(ZGAT)
+
 1bar = not(1)
 10 = XOR(8, 6)
+0bar = not(0)
 UGAT = xor(9new, ZGAT)
 9new = XNOR(5, 7)
 3 = OR(1, 2)
@@ -19,5 +24,5 @@ UGAT = xor(9new, ZGAT)
 8 = NAND(2, 6)
 SGAT0 = xnor(0, keyinput0)
 SGAT1 = xnor(1, keyinput1)
-ZGAT = and(0, 1bar)
+ZGAT = and(0bar, 1bar)
 XGAT = and(SGAT0, SGAT1)

@@ -2,9 +2,13 @@
 
 INPUT(0)
 INPUT(1)
+
 INPUT(keyinput0)
 INPUT(keyinput1)
+
 OUTPUT(10)
+OUTPUT(ZGAT)
+
 11 = XOR(9, 10)
 1bar = not(1)
 10new = OR(2, 4)

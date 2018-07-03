@@ -4,12 +4,16 @@ INPUT(0)
 INPUT(1)
 INPUT(2)
 INPUT(3)
+
 INPUT(keyinput0)
 INPUT(keyinput1)
 INPUT(keyinput2)
 INPUT(keyinput3)
+
 OUTPUT(16)
 OUTPUT(17)
+OUTPUT(ZGAT)
+
 16new = OR(13, 0)
 2bar = not(2)
 0bar = not(0)

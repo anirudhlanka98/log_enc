@@ -3,10 +3,14 @@
 INPUT(0)
 INPUT(1)
 INPUT(2)
+
 INPUT(keyinput0)
 INPUT(keyinput1)
 INPUT(keyinput2)
+
 OUTPUT(11)
+OUTPUT(ZGAT)
+
 11 = xor(UGAT, XGAT)
 10 = NOR(7, 4)
 12 = NOT(9)

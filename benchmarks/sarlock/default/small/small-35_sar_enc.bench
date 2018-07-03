@@ -1,24 +1,29 @@
-#Key = 0110
+#Key = 1000
 
 INPUT(0)
 INPUT(1)
 INPUT(2)
 INPUT(3)
+
 INPUT(keyinput0)
 INPUT(keyinput1)
 INPUT(keyinput2)
 INPUT(keyinput3)
+
 OUTPUT(16)
 OUTPUT(17)
+OUTPUT(ZGAT)
+
+1bar = not(1)
 3bar = not(3)
+2bar = not(2)
 XGAT = and(SGAT0, SGAT1, SGAT2, SGAT3)
-0bar = not(0)
 SGAT1 = xnor(1, keyinput1)
 SGAT2 = xnor(2, keyinput2)
 SGAT3 = xnor(3, keyinput3)
 SGAT0 = xnor(0, keyinput0)
 17new = NAND(12, 8)
-ZGAT = and(0bar, 1, 2, 3bar)
+ZGAT = and(0, 1bar, 2bar, 3bar)
 11 = AND(7, 8)
 10 = XOR(0, 6)
 13 = XNOR(1, 8)
