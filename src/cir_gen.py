@@ -30,7 +30,7 @@ while k <= n:
 for i in range(n_op,n):
 	outputs = outputs + [i]
 
-fname = 'c' + n_str
+fname = 'c' + n_str + '.bench'
 
 f = open(fname,"w+")
 
