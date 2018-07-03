@@ -1,0 +1,20 @@
+INPUT(0)
+INPUT(1)
+INPUT(2)
+
+OUTPUT(12)
+OUTPUT(13)
+
+3 = XOR(2, 1)
+4 = AND(0, 1)
+5 = OR(0, 2)
+6 = NAND(1, 2)
+7 = XOR(3, 5)
+8 = AND(2, 1)
+9 = NOT(4)
+10 = NOT(3)
+11 = NAND(0, 2)
+12 = NAND(0, 1)
+13 = NAND(11, 0)
+14 = NOT(4)
+

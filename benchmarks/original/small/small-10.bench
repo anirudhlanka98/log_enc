@@ -1,0 +1,19 @@
+INPUT(0)
+INPUT(1)
+INPUT(2)
+
+OUTPUT(11)
+
+3 = XNOR(0, 2)
+4 = NOR(1, 0)
+5 = NOT(1)
+6 = NOR(3, 0)
+7 = NOR(4, 5)
+5 = NOT(1)
+8 = AND(5, 2)
+9 = OR(2, 1)
+10 = NAND(0, 5)
+5 = NOT(1)
+11 = NAND(0, 3)
+12 = NAND(3, 0)
+

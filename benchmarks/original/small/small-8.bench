@@ -1,0 +1,19 @@
+INPUT(0)
+INPUT(1)
+INPUT(2)
+
+OUTPUT(11)
+
+3 = NOT(0)
+4 = NOR(2, 3)
+3 = NOT(0)
+5 = NOT(4)
+6 = NOR(2, 1)
+7 = NOR(3, 4)
+8 = XOR(3, 0)
+9 = XNOR(8, 3)
+3 = NOT(0)
+10 = NOR(7, 4)
+11 = XNOR(8, 4)
+12 = NOT(9)
+

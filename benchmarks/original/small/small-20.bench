@@ -1,0 +1,15 @@
+INPUT(0)
+INPUT(1)
+
+OUTPUT(9)
+
+2 = XOR(1, 0)
+3 = OR(1, 2)
+4 = NAND(0, 1)
+5 = NOT(3)
+6 = XNOR(4, 1)
+7 = NOR(3, 0)
+8 = NAND(2, 6)
+9 = XNOR(5, 7)
+10 = XOR(8, 6)
+

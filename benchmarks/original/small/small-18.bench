@@ -1,0 +1,16 @@
+INPUT(0)
+INPUT(1)
+
+OUTPUT(10)
+
+2 = XOR(1, 0)
+3 = XOR(2, 1)
+4 = XOR(0, 3)
+5 = XNOR(4, 0)
+6 = NAND(3, 4)
+7 = NOT(1)
+8 = XNOR(5, 3)
+9 = AND(6, 3)
+10 = OR(2, 4)
+11 = XOR(9, 10)
+

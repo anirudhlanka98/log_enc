@@ -1,0 +1,16 @@
+INPUT(0)
+INPUT(1)
+
+OUTPUT(9)
+
+2 = NOT(0)
+3 = XNOR(2, 1)
+4 = XOR(1, 2)
+2 = NOT(0)
+5 = OR(1, 0)
+6 = NOT(1)
+7 = NOR(2, 1)
+8 = NAND(7, 0)
+9 = AND(0, 1)
+10 = NOT(1)
+

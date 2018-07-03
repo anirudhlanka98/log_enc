@@ -1,0 +1,23 @@
+INPUT(0)
+INPUT(1)
+INPUT(2)
+INPUT(3)
+
+OUTPUT(15)
+OUTPUT(16)
+
+4 = XNOR(2, 3)
+5 = AND(0, 3)
+6 = NOR(3, 2)
+7 = NOR(4, 3)
+8 = NAND(6, 1)
+9 = NOR(7, 3)
+10 = NOT(7)
+11 = XOR(2, 1)
+12 = XNOR(7, 2)
+13 = XOR(2, 12)
+14 = NOR(1, 6)
+15 = NOR(3, 4)
+16 = NAND(12, 5)
+17 = NOT(13)
+
