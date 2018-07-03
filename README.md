@@ -9,3 +9,6 @@ The format to run is: python ran_enc.py <name_of_circuit.bench>
 
 sar_enc.py is used to encrypt the given circuit using SARLock methodology. It creates a new bench file of the encrypted circuit with the name <original_circuit_sar_enc.bench>
 The format to run is: python sar_enc.py <name_of_circuit.bench>
+
+cir_gen.py is used to generate circuits. It creates a new bench file with the name <c"no_of_nodes".bench>
+The format to run is: python cir_gen.py <no_of_nodes>
