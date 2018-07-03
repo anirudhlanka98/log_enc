@@ -62,12 +62,18 @@ f.write("\n\n")
 for i in sorted(seq.keys()):
 	f.write("INPUT(%s)\n"%seq[i])
 
+f.write("\n")
 
 for i in range(len(key_inp)):
 	f.write("INPUT(keyinput%d)\n"%i)	
 
+f.write("\n")
+
 for i in outputs:
 	f.write("OUTPUT(%s)\n"%i)
+
+f.write("OUTPUT(ZGAT)\n")
+f.write("\n")
 
 for i in fanins:
 	if types[i] != 'input':
