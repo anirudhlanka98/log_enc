@@ -12,3 +12,8 @@ The format to run is: python sar_enc.py <name_of_circuit.bench>
 
 cir_gen.py is used to generate circuits. It creates a new bench file with the name <c"no_of_nodes".bench>
 The format to run is: python cir_gen.py <no_of_nodes>
+
+small_cir_gen.py is used to generate multiple small circuits. It creates a new bench file with the name <small-"i".bench> where i increments based on the existency of the file with the same name in the same directory.
+The format to run is: python cir_gen.py <no_of_circuits>
+
+dataset_gen.py takes in all the bench files in the directory and generates a dataset used for training a Graph Convolution Network.
