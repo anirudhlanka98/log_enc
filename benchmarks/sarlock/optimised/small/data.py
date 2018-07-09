@@ -5,6 +5,7 @@ from scipy.sparse import csr_matrix
 import pickle as pkl
 from collections import defaultdict
 import itertools
+import random
 seen = []
 features1 = []
 features2 = []
@@ -68,13 +69,16 @@ for z in glob.glob("*_keych.bench"):
 		noutputs = noutputs + [maps[x]]
 
 def splitDict(d):
-    n = len(d) * (0.2)
-    # i = d.iteritems()
-    i = iter(d.items())
-    d1 = dict(itertools.islice(i, n))
-    d2 = dict(i)
-
-    return d1, d2
+	all_keys = d.keys()
+	random.shuffle(all_keys)
+	n = int(len(d) * (0.2))
+	d1, d2 = {}, {}
+	for i, k in enumerate(all_keys):
+		if i < n:
+			d1[k] = d[k]
+		else:
+			d2[k] = d[k]
+	return d1, d2
 
 ntypes1, ntypes2 = splitDict(ntypes)
 
@@ -108,23 +112,21 @@ for j in sorted(ntypes2.keys()):
 labels1 = np.ndarray([len(ntypes1),2])
 labels2 = np.ndarray([len(ntypes2),2])
 
-for j in sorted(ntypes1):
+for i, j in enumerate(sorted(ntypes1)):
 	if maps['ZGAT']:
-		labels1[j] = [1,0]
+		labels1[i] = [1,0]
 	else:
-		labels1[j] = [0,1]
+		labels1[i] = [0,1]
 
 with open('ind.logdec.test.index', 'wt') as f:
-    for i in ntypes:
-        print ('%d\n' % i, file=f)
+    for i in ntypes1:
+        print ('%d' % i, file=f)
 
-k = 0
-for j in sorted(ntypes2):
+for k, j in enumerate(sorted(ntypes2)):
 	if maps['ZGAT']:
 		labels2[k] = [1,0]
 	else:
 		labels2[k] = [0,1]
-	k = k + 1
 
 feat_csr1 = csr_matrix(features1)
 feat_csr2 = csr_matrix(features2)
