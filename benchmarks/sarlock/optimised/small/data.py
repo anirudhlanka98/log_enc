@@ -88,7 +88,8 @@ for j in sorted(nfanins.keys()):
 			if ntypes[j] != 'input':
 				f = nfanins[j]
 				for x in f:
-					d[x] += [int(j)]
+					d[x] += [j]
+					d[j] += [x]
 
 for j in sorted(ntypes1.keys()):
 	if ntypes1[j] == 'AND' or ntypes1[j] == 'and':
