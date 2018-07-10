@@ -80,7 +80,8 @@ def splitDict(d):
 			d2[k] = d[k]
 	return d1, d2
 
-ntypes1, ntypes2 = splitDict(ntypes)
+ntypes1, _ = splitDict(ntypes)
+ntypes2 = ntypes
 
 
 for j in sorted(nfanins.keys()):
@@ -109,14 +110,16 @@ for j in sorted(ntypes2.keys()):
 	elif ntypes2[j] == 'KEYINPUT' or ntypes2[j] == 'keyinput':
 		features2.append([2,0,0,0,1,1])
 
-labels1 = np.ndarray([len(ntypes1),2])
-labels2 = np.ndarray([len(ntypes2),2])
+labels1 = np.ndarray(shape=([len(ntypes1),2]),dtype=int)
+labels2 = np.ndarray(shape=([len(ntypes2),2]),dtype=int)
+
 
 for i, j in enumerate(sorted(ntypes1)):
 	if maps['ZGAT']:
 		labels1[i] = [1,0]
 	else:
 		labels1[i] = [0,1]
+
 
 with open('ind.logdec.test.index', 'wt') as f:
     for i in ntypes1:
@@ -128,8 +131,12 @@ for k, j in enumerate(sorted(ntypes2)):
 	else:
 		labels2[k] = [0,1]
 
-feat_csr1 = csr_matrix(features1)
-feat_csr2 = csr_matrix(features2)
+
+feat1 = csr_matrix(features1)
+feat2 = csr_matrix(features2)
+
+feat_csr1 = csr_matrix.astype(feat1,np.float32)
+feat_csr2 = csr_matrix.astype(feat2,np.float32)
 
 x = open("ind.logdec.x","wt")
 tx = open("ind.logdec.tx","wt")
