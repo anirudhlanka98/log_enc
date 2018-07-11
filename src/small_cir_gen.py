@@ -10,9 +10,10 @@ while m < w :
 	outputs = []
 
 	lk = ['AND','OR','NOT','NAND','NOR','XOR','XNOR']
-	s = "Enter the number of gates for circuit ",m,": "
-	n_str = input(s)
-	n = int(n_str)
+	#s = "Enter the number of gates for circuit ",m,": "
+	#n_str = input(s)
+	#n = int(n_str)
+	n = 30
 	n_in = int(0.25 * n)
 	n_op = n - int(0.15 * n)
 
