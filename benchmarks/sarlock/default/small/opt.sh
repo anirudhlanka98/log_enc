@@ -1,6 +1,6 @@
 #!/bin/bash
 x=1
-while [ $x -le 1 ]
+while [ $x -le 40 ]
 do
 	z="small-"$x
 	cd $z
@@ -15,14 +15,13 @@ do
 		exec 3<&-
 		c=$(echo $i | head -n1 | cut -d "_" -f1 )
 		d=$(echo $i | head -n1 | cut -d "-" -f3 )
-		g=$(echo $a $b '-c "write_bench -l' $c'_opt-'$d'.bench"')
-		echo $g
-		sleep 0.5s
+		g=$(echo $a $b '-c "write_bench -l' $c'_opt-'$d'"')
+		eval $g
 	done
 	mkdir $z"_opt"
-	for m in *_opt.bench
+	for m in *_opt-*.bench
 	do
-		mv $c $z"_opt"
+		mv $m $z"_opt"
 	done
 	cd ../
 	x=$(( $x + 1 ))
