@@ -10,9 +10,10 @@ features1 = []
 features2 = []
 test_ind = []
 i = 0
-
+o = 1
 types = {}
-ntypes = {}
+ntypes1 = {}
+ntypes2 = {}
 fanins = {}
 nfanins = {}
 outputs = []
@@ -21,11 +22,7 @@ maps = {}
 zgats = set()
 
 for z in glob.glob("*.bench"):
-    if z[-10:] == "test.bench":
-        print(z)
-
-
-for z in glob.glob("*.bench"):
+    print(o," : ",z)
     te = z[-10:]
     file = open(z, "r")
     for x in file.readlines() :
@@ -84,6 +81,7 @@ for z in glob.glob("*.bench"):
     zgats.add(maps['ZGAT'])
     for x in outputs:
         noutputs = noutputs + [maps[x]]
+    o += 1
 '''
 def splitDict(d):
     all_keys = d.keys()
@@ -167,4 +165,3 @@ graf.close()
 with open('ind.logdec.test.index', 'wt') as f:
     for i in ntypes1:
         print ('%d' % i, file=f)
-
