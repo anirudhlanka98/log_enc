@@ -6,7 +6,6 @@ import pickle as pkl
 from collections import defaultdict
 import itertools
 import random
-seen = []
 features1 = []
 features2 = []
 test_ind = []
@@ -21,9 +20,13 @@ noutputs = []
 maps = {}
 zgats = set()
 
+for z in glob.glob("*.bench"):
+    if z[-10:] == "test.bench":
+        print(z)
+
 
 for z in glob.glob("*.bench"):
-    print(z)
+    te = z[-10:]
     file = open(z, "r")
     for x in file.readlines() :
         f = []
@@ -31,10 +34,16 @@ for z in glob.glob("*.bench"):
             y = x.replace("INPUT(", "").replace(")", "").replace("\n", "")
             if 'keyinput' in y:
                 types.update({y:'keyinput'})
-                ntypes.update({i:'keyinput'})
+                if te == "test.bench":
+                    ntypes1.update({i:'keyinput'})
+                else:
+                    ntypes2.update({i:'keyinput'})
             else:
                 types.update({y:'input'})
-                ntypes.update({i:'input'})
+                if te == "test.bench":
+                    ntypes1.update({i:'input'})
+                else:
+                    ntypes2.update({i:'input'})
             fanins.update({y:[]})
             nfanins.update({i:[]})
             maps.update({y:i})
@@ -56,20 +65,26 @@ for z in glob.glob("*.bench"):
                 nf = []
                 for x in f:
                     nf = nf + [maps[x]]
-                ntypes.update({i:gate_name})
+                if te == "test.bench":
+                    ntypes1.update({i:gate_name})
+                else:
+                    ntypes2.update({i:gate_name})
                 nfanins.update({i:nf})
             else:
                 types.update({parts[0]:'vdd'})
                 fanins.update({parts[0]:[]})
                 maps.update({parts[0]:i})
-                ntypes.update({i:'vdd'})
+                if te == "test.bench":
+                    ntypes1.update({i:'vdd'})
+                else:
+                    ntypes2.update({i:'vdd'})
                 nfanins.update({i:[]})
             i = i + 1
 
     zgats.add(maps['ZGAT'])
     for x in outputs:
         noutputs = noutputs + [maps[x]]
-
+'''
 def splitDict(d):
     all_keys = d.keys()
     random.shuffle(all_keys)
@@ -83,7 +98,7 @@ def splitDict(d):
     return d1, d2
 
 ntypes1, ntypes2 = splitDict(ntypes)
-
+'''
 for j in sorted(ntypes1.keys()):
     if ntypes1[j] == 'AND' or ntypes1[j] == 'and':
         features1.append([0,2,0,0,0,1])
