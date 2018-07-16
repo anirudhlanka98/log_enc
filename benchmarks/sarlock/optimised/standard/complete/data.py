@@ -163,4 +163,8 @@ graf.close()
 
 with open('ind.logdec.test.index', 'wt') as f:
     for i in ntypes1:
+<<<<<<< HEAD:benchmarks/sarlock/optimised/standard/complete/data.py
         print ('%d' % i, file=f)
+=======
+        print ('%d' % i, file=f)
+>>>>>>> 144bccdf0b285343f85fce16f91ac5bca499eeac:benchmarks/sarlock/optimised/standard/data/data.py
