@@ -6,6 +6,9 @@ import pickle as pkl
 from collections import defaultdict
 import itertools
 import random
+import sys
+import os.path
+
 features1 = []
 features2 = []
 test_ind = []
@@ -15,11 +18,8 @@ visited = set()
 types = {}
 ntypes1 = {}
 ntypes2 = {}
-fanins = {}
 nfanins = {}
-outputs = []
-noutputs = []
-maps = {}
+noutputs = set()
 zgats = set()
 
 def dfs(n, depth, visited):
@@ -29,67 +29,72 @@ def dfs(n, depth, visited):
     for f in nfanins[n]:
         dfs(f,depth-1,visited)
 
-for z in glob.glob("*.bench"):
+for z in glob.glob(os.path.join(sys.argv[1], "*.bench")):
     print(o," : ",z)
     te = z[-10:]
     file = open(z, "r")
+
+    fanins = {}
+    maps = {}
+    outputs = set()
+
     l = file.readlines()
-    for x in l :
+    for x in l:
         f = []
         if 'INPUT' in x:
             y = x.replace("INPUT(", "").replace(")", "").replace("\n", "")
             if 'keyinput' in y:
-                types.update({y:'keyinput'})
+                types[y] = 'keyinput'
                 if te == "test.bench":
-                    ntypes1.update({i:'keyinput'})
+                    ntypes1[i] = 'keyinput'
                 else:
-                    ntypes2.update({i:'keyinput'})
+                    ntypes2[i] = 'keyinput'
             else:
-                types.update({y:'input'})
+                types[y] = 'input'
                 if te == "test.bench":
-                    ntypes1.update({i:'input'})
+                    ntypes1[i] = 'input'
                 else:
-                    ntypes2.update({i:'input'})
-            fanins.update({y:[]})
-            nfanins.update({i:[]})
-            maps.update({y:i})
+                    ntypes2[i] = 'input'
+            fanins[y] = []
+            nfanins[i] = []
+            maps[y] = i
             i = i + 1
 
         elif 'OUTPUT' in x:
             y = x.replace("OUTPUT(", "").replace(")", "").replace("\n", "")
-            outputs = outputs + [y]
+            outputs.add(y)
 
         elif '=' in x:
             parts = [p.strip() for p in x.split('=')]
             if parts[1] != 'vdd':
                 gate_name = parts[1][:parts[1].find('(')]
-                types.update({parts[0]:gate_name})
+                types[parts[0]] = gate_name
                 within_br = parts[1][parts[1].find('(')+1:parts[1].find(')')]
                 f = [p.strip() for p in within_br.split(',')]
-                fanins.update({parts[0]:f})
-                maps.update({parts[0]:i})
+                fanins[parts[0]] = f
+                maps[parts[0]] = i
                 nf = []
                 for x in f:
                     nf = nf + [maps[x]]
                 if te == "test.bench":
-                    ntypes1.update({i:gate_name})
+                    ntypes1[i] = gate_name
                 else:
-                    ntypes2.update({i:gate_name})
-                nfanins.update({i:nf})
+                    ntypes2[i] = gate_name
+                nfanins[i] = nf
             else:
-                types.update({parts[0]:'vdd'})
-                fanins.update({parts[0]:[]})
-                maps.update({parts[0]:i})
+                types[parts[0]] = 'vdd'
+                fanins[parts[0]] = []
+                maps[parts[0]] = i
                 if te == "test.bench":
-                    ntypes1.update({i:'vdd'})
+                    ntypes1[i] = 'vdd'
                 else:
-                    ntypes2.update({i:'vdd'})
-                nfanins.update({i:[]})
+                    ntypes2[i] = 'vdd'
+                nfanins[i] = []
             i = i + 1
 
     zgats.add(maps['ZGAT'])
     for x in outputs:
-        noutputs = noutputs + [maps[x]]
+        noutputs.add(maps[x])
     o += 1
 
 
@@ -139,37 +144,13 @@ for i, j in enumerate(sorted(ntypes1.keys())):
         labels1[i] = [0,0,1]
         c3 += 1
 
-print(c1,c2,c3)
-c3range = list(range(c3))
-random.shuffle(c3range)
-selected_l3s = set(c3range[:c1+c2])
-
-labels1p = []
-features1p = []
-cnt = 0
-for i in range(len(ntypes1)):
-    if list(labels1[i]) == [0, 0, 1]:
-        cnt += 1
-        if cnt in selected_l3s:
-            labels1p.append(labels1[i])
-            features1p.append(features1[i])
-    else:
-        labels1p.append(labels1[i])
-        features1p.append(features1[i])
-
-labels1 = np.ndarray(shape=([len(labels1p),3]),dtype=int)
-
-for i, j in enumerate(labels1p):
-    labels1[i] = j
-
-
 for i, j in enumerate(sorted(ntypes2.keys())):
     if j in zgats: labels2[i] = [1,0,0]
     elif j in visited: labels2[i] = [0,1,0]
     else: labels2[i] = [0,0,1]
 
 
-feat1 = csr_matrix(features1p)
+feat1 = csr_matrix(features1)
 feat2 = csr_matrix(features2)
 
 feat_csr1 = csr_matrix.astype(feat1,np.float32)
