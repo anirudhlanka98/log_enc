@@ -6,14 +6,15 @@ import pickle as pkl
 from collections import defaultdict
 import itertools
 import random
-seen = []
 features1 = []
 features2 = []
 test_ind = []
 i = 0
-
+o = 1
+visited = set()
 types = {}
-ntypes = {}
+ntypes1 = {}
+ntypes2 = {}
 fanins = {}
 nfanins = {}
 outputs = []

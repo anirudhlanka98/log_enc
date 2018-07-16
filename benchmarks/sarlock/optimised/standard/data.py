@@ -10,9 +10,11 @@ features1 = []
 features2 = []
 test_ind = []
 i = 0
-
+o = 1
+visited = set()
 types = {}
-ntypes = {}
+ntypes1 = {}
+ntypes2 = {}
 fanins = {}
 nfanins = {}
 outputs = []
@@ -20,15 +22,19 @@ noutputs = []
 maps = {}
 zgats = set()
 
-for z in glob.glob("*.bench"):
-    if z[-10:] == "test.bench":
-        print(z)
+def dfs(n, depth, visited):
+    if depth == 0 or n in visited :
+        return
+    visited.add(n)
+    for f in nfanins[n]:
+        dfs(f,depth-1,visited)
 
-
 for z in glob.glob("*.bench"):
+    print(o," : ",z)
     te = z[-10:]
     file = open(z, "r")
-    for x in file.readlines() :
+    l = file.readlines()
+    for x in l :
         f = []
         if 'INPUT' in x:
             y = x.replace("INPUT(", "").replace(")", "").replace("\n", "")
@@ -84,21 +90,9 @@ for z in glob.glob("*.bench"):
     zgats.add(maps['ZGAT'])
     for x in outputs:
         noutputs = noutputs + [maps[x]]
-'''
-def splitDict(d):
-    all_keys = d.keys()
-    random.shuffle(all_keys)
-    n = int(len(d) * (0.3))
-    d1, d2 = {}, {}
-    for i, k in enumerate(all_keys):
-        if i < n:
-            d1[k] = d[k]
-        else:
-            d2[k] = d[k]
-    return d1, d2
+    o += 1
 
-ntypes1, ntypes2 = splitDict(ntypes)
-'''
+
 for j in sorted(ntypes1.keys()):
     if ntypes1[j] == 'AND' or ntypes1[j] == 'and':
         features1.append([0,2,0,0,0,1])
@@ -123,18 +117,59 @@ for j in sorted(ntypes2.keys()):
     else:
         features2.append([4,0,0,0,0,0])
 
-labels1 = np.ndarray(shape=([len(ntypes1),2]),dtype=int)
-labels2 = np.ndarray(shape=([len(ntypes2),2]),dtype=int)
+labels1 = np.ndarray(shape=([len(ntypes1),3]),dtype=int)
+labels2 = np.ndarray(shape=([len(ntypes2),3]),dtype=int)
+
+for z in zgats:
+    dfs(z,3,visited)
+    visited.remove(z)
+
+c1 = 0
+c2 = 0
+c3 = 0
 
 for i, j in enumerate(sorted(ntypes1.keys())):
-    if j in zgats: labels1[i] = [1,0]
-    else: labels1[i] = [0,1]
+    if j in zgats: 
+        labels1[i] = [1,0,0]
+        c1 += 1
+    elif j in visited: 
+        labels1[i] = [0,1,0]
+        c2 += 1
+    else: 
+        labels1[i] = [0,0,1]
+        c3 += 1
+
+print(c1,c2,c3)
+c3range = list(range(c3))
+random.shuffle(c3range)
+selected_l3s = set(c3range[:c1+c2])
+
+labels1p = []
+features1p = []
+cnt = 0
+for i in range(len(ntypes1)):
+    if list(labels1[i]) == [0, 0, 1]:
+        cnt += 1
+        if cnt in selected_l3s:
+            labels1p.append(labels1[i])
+            features1p.append(features1[i])
+    else:
+        labels1p.append(labels1[i])
+        features1p.append(features1[i])
+
+labels1 = np.ndarray(shape=([len(labels1p),3]),dtype=int)
+
+for i, j in enumerate(labels1p):
+    labels1[i] = j
+
 
 for i, j in enumerate(sorted(ntypes2.keys())):
-    if j in zgats: labels2[i] = [1,0]
-    else: labels2[i] = [0,1]
+    if j in zgats: labels2[i] = [1,0,0]
+    elif j in visited: labels2[i] = [0,1,0]
+    else: labels2[i] = [0,0,1]
 
-feat1 = csr_matrix(features1)
+
+feat1 = csr_matrix(features1p)
 feat2 = csr_matrix(features2)
 
 feat_csr1 = csr_matrix.astype(feat1,np.float32)
@@ -147,6 +182,8 @@ graf = open("ind.logdec.graph","wt")
 y = open("ind.logdec.y","wt")
 ty = open("ind.logdec.ty","wt")
 ally = open("ind.logdec.ally","wt")
+
+print(len(labels1), len(labels2),feat_csr1.shape,feat_csr2.shape)
 
 pkl.dump(labels2,y)
 pkl.dump(labels2,ally)
