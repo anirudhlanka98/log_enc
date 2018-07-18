@@ -81,42 +81,81 @@ for z in zgats:
     dfs(z,3,visited)
     visited.remove(z)
 
-features1, features2 = [], []
-labels1, labels2 = [], []
-c1, c2, c3 = 0, 0, 0
+features_test, features_train, features_train_all = [], [], []
+labels_test, labels_train, labels_train_all = [], [], []
+indices = {}
 
 total_positive = float(len(visited) + len(zgats))
-undersampling_ratio = total_positive / (float(len(ntypes)) - total_positive)
+undersampling_ratio = (total_positive) / (float(len(ntypes)) - total_positive)
+print (len(zgats), len(visited), len(ntypes), undersampling_ratio)
+
+incCnt, c1, c2, c3, c4 = 0, 0, 0, 0, 0
+def to_one_hot(i, n):
+    l = [0] * n
+    l[i] = 1
+    return l
 
 for i in ntypes.keys():
-    if tag[i] == 'test':
-        features, labels = features1, labels1
+    include = (i in zgats) or (i in visited) or (random.random() < undersampling_ratio)
+    included_test = False
+    if not include:
+        c4 += 1
+    elif tag[i] == 'test':
+        incCnt += 1
+        features, labels = features_test, labels_test
+        included_test = True
     else:
-    #elif i in zgats or i in visited or random.random() < undersampling_ratio:
-        features, labels = features2, labels2
-    #else:
-    #    continue
+        incCnt += 1
+        features, labels = features_train, labels_train
     
     if ntypes[i].upper() == 'AND':
-        features.append([0,2,0,0,0,1])
+        #f = to_one_hot(0, 5) + to_one_hot(2, 3) + [0,0,0,1]
+        f = [0,2,0,0,0,1]
+        #f = [0,2]
     elif ntypes[i].upper() == 'NOT':
-        features.append([1,1,1,1,0,0])
+        #f = to_one_hot(1, 5) + to_one_hot(1, 3) + [1,1,0,0]
+        f = [1,1,1,1,0,0]
+        #f = [1,1]
     elif ntypes[i].upper() == 'INPUT':
-        features.append([2,0,0,0,1,1])
+        #f = to_one_hot(2, 5) + to_one_hot(0, 3) + [0,0,1,1]
+        f = [2,0,0,0,1,1]
+        #f = [2,0]
     elif ntypes[i].upper() == 'KEYINPUT':
-        features.append([3,0,0,0,1,1])
+        #f = to_one_hot(3, 5) + to_one_hot(0, 3) + [0,0,1,1]
+        f = [3,0,0,0,1,1]
+        #f = [3,0]
     else:
-        features.append([4,0,0,0,0,0])
+        #f = to_one_hot(4, 5) + to_one_hot(0, 3) + [0,0,0,0]
+        f = [4,0,0,0,0,0]
+        #f = [4,0]
 
     if i in zgats: 
-        labels.append([1,0,0])
-        c1 += 1
+        l = [1,0,0]
+        if include and tag[i] == 'test':
+            c1 += 1
     elif i in visited: 
-        labels.append([0,1,0])
-        c2 += 1
+        l = [0,1,0]
+        if include and tag[i] == 'test':
+            c2 += 1
     else: 
-        labels.append([0,0,1])
-        c3 += 1
+        l = [0,0,1]
+        if include and tag[i] == 'test':
+            c3 += 1
+
+    if include:
+        indices[i] = len(features)
+        features.append(f)
+        labels.append(l)
+    elif not included_test:
+        features_train_all.append(f)
+        labels_train_all.append(l)
+
+
+features_train_all = features_train + features_train_all
+labels_train_all = labels_train + labels_train_all
+
+print ("nodes: ", len(ntypes))
+print ("counts:", c1, c2, c3, c4)
 
 def to_ndarray(l,dtype=int):
     assert len(l) > 0 and len(l[0]) > 0
@@ -127,39 +166,42 @@ def to_ndarray(l,dtype=int):
         arr[i] = row
     return arr
 
-labels1 = to_ndarray(labels1)
-labels2 = to_ndarray(labels2)
-feat_csr1 = csr_matrix.astype(csr_matrix(features1),np.float32)
-feat_csr2 = csr_matrix.astype(csr_matrix(features2),np.float32)
+labels_test = to_ndarray(labels_test)
+labels_train = to_ndarray(labels_train)
+labels_train_all = to_ndarray(labels_train_all)
+feat_csr_test = csr_matrix.astype(csr_matrix(features_test), np.float32)
+feat_csr_train = csr_matrix.astype(csr_matrix(features_train), np.float32)
+feat_csr_train_all = csr_matrix.astype(csr_matrix(features_train_all), np.float32)
 
-x = open("ind.logdec.x","wt")
-tx = open("ind.logdec.tx","wt")
-allx = open("ind.logdec.allx","wt")
-graf = open("ind.logdec.graph","wt")
-y = open("ind.logdec.y","wt")
-ty = open("ind.logdec.ty","wt")
-ally = open("ind.logdec.ally","wt")
+f_x = open("ind.logdec.x","wt")
+f_tx = open("ind.logdec.tx","wt")
+f_allx = open("ind.logdec.allx","wt")
+f_graf = open("ind.logdec.graph","wt")
+f_y = open("ind.logdec.y","wt")
+f_ty = open("ind.logdec.ty","wt")
+f_ally = open("ind.logdec.ally","wt")
 
-print(len(labels1), len(labels2),feat_csr1.shape,feat_csr2.shape)
+print ("label lengths (test, train, all, cnt):", len(labels_test), len(labels_train), len(labels_train_all), len(nfanins)),
+print ("features size (test, train, all, cnt):", feat_csr_test.shape, feat_csr_train.shape, feat_csr_train_all.shape, len(nfanins))
 
-pkl.dump(labels2,y)
-pkl.dump(labels2,ally)
-pkl.dump(labels1,ty)
-pkl.dump(feat_csr2,x)
-pkl.dump(feat_csr2,allx)
-pkl.dump(feat_csr1,tx)
-pkl.dump(nfanins,graf)
+pkl.dump(labels_train, f_y)
+pkl.dump(labels_train_all, f_ally)
+pkl.dump(labels_test, f_ty)
+pkl.dump(feat_csr_train, f_x)
+pkl.dump(feat_csr_train_all, f_allx)
+pkl.dump(feat_csr_test, f_tx)
+pkl.dump(nfanins, f_graf)
 
-x.close()
-allx.close()
-tx.close()
-y.close()
-ally.close()
-ty.close()
-graf.close()
+f_x.close()
+f_allx.close()
+f_tx.close()
+f_y.close()
+f_ally.close()
+f_ty.close()
+f_graf.close()
 
 with open('ind.logdec.test.index', 'wt') as f:
     for i in tag:
-        if tag[i] == 'test':
-            print ('%d' % i, file=f)
+        if i in indices and tag[i] == 'test':
+            print ('%d' % indices[i], file=f)
 
