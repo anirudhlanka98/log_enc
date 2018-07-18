@@ -11,7 +11,6 @@ import os.path
 
 features1 = []
 features2 = []
-test_ind = set()
 train = set()
 test = set()
 sel_train = set()
@@ -129,10 +128,10 @@ for z in glob.glob(os.path.join(sys.argv[1], "*.bench")):
 
 
 for r in train:
-    dfs(r,3,sel_train)
+    dfs(r,4,sel_train)
 
 for r in test:
-    dfs(r,3,sel_test)
+    dfs(r,4,sel_test)
 
 for z in zgats1:
     dfs(z,3,visited1)
@@ -228,8 +227,10 @@ for i in sorted(zgats2):
     labels2[k] = [0,0,1]
     k += 1
 
-sel_train.union(visited2)
-sel_train.union(zgats2)
+sel_train = sel_train.union(visited2).union(zgats2)
+#sel_intr = sel_train.intersection(visited2)
+print(len(sel_intr))
+print(len(labels2))
 
 for i, j in enumerate(sel_train):
      gr[i] = nfanins[j]
@@ -269,8 +270,7 @@ ally.close()
 ty.close()
 graf.close()
 
-sel_test.union(visited1)
-sel_test.union(zgats1)
+sel_test = sel_test.union(visited1).union(zgats1)
 
 with open('ind.logdec.test.index', 'wt') as f:
     for i in sel_test:
