@@ -17,3 +17,5 @@ small_cir_gen.py is used to generate multiple small circuits. It creates a new b
 The format to run is: python cir_gen.py <no_of_circuits>
 
 dataset_gen.py takes in all the bench files in the directory and generates a dataset used for training a Graph Convolution Network.
+
+data_undersampled.py takes in all the bench files in a directory mentioned and generates a balanced version (by undersampling) of the a dataset used for training a Graph Convolutional Network.
