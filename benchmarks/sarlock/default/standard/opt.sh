@@ -22,6 +22,7 @@ do
 		do
 			mv $m $z"_opt"
 		done
+		mv $z"_opt" ../
 		cd ../
 	fi
 done

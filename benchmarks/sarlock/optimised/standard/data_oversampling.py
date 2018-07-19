@@ -86,8 +86,8 @@ labels_test, labels_train, labels_train_all = [], [], []
 indices = {}
 
 total_positive = float(len(visited) + len(zgats))
-undersampling_ratio =  ((total_positive) / (float(len(ntypes)) - total_positive))
-print (len(zgats), len(visited), len(ntypes), undersampling_ratio)
+oversampling_ratio = 1 - ((total_positive) / (float(len(ntypes)) - total_positive))
+print (len(zgats), len(visited), len(ntypes), oversampling_ratio)
 
 incCnt, c1, c2, c3, c4 = 0, 0, 0, 0, 0
 def to_one_hot(i, n):
@@ -96,8 +96,9 @@ def to_one_hot(i, n):
     return l
 
 for i in ntypes.keys():
-    include = (i in zgats) or (i in visited) or (random.random() < undersampling_ratio)
+    include = ((i not in zgats) and (i not in visited)) or (random.random() < oversampling_ratio)
     included_test = False
+
     if not include:
         c4 += 1
     elif tag[i] == 'test':
@@ -110,23 +111,23 @@ for i in ntypes.keys():
     
     if ntypes[i].upper() == 'AND':
         #f = to_one_hot(0, 5) + to_one_hot(2, 3) + [0,0,0,1]
-        f = [0,2,0,0,0,1]
+        f = [0,2,00,0,01,0,10,0,11,1]
         #f = [0,2]
     elif ntypes[i].upper() == 'NOT':
         #f = to_one_hot(1, 5) + to_one_hot(1, 3) + [1,1,0,0]
-        f = [1,1,1,1,0,0]
+        f = [1,1,0,1,0,1,1,0,1,0]
         #f = [1,1]
     elif ntypes[i].upper() == 'INPUT':
         #f = to_one_hot(2, 5) + to_one_hot(0, 3) + [0,0,1,1]
-        f = [2,0,0,0,1,1]
+        f = [2,0,0,0,0,0,1,1,1,1]
         #f = [2,0]
     elif ntypes[i].upper() == 'KEYINPUT':
         #f = to_one_hot(3, 5) + to_one_hot(0, 3) + [0,0,1,1]
-        f = [3,0,0,0,1,1]
+        f = [3,0,0,0,0,0,1,1,1,1]
         #f = [3,0]
     else:
         #f = to_one_hot(4, 5) + to_one_hot(0, 3) + [0,0,0,0]
-        f = [4,0,0,0,0,0]
+        f = [4,0,0,1,0,1,1,1,1,1]
         #f = [4,0]
 
     if i in zgats: 
