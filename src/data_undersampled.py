@@ -26,6 +26,17 @@ def dfs(n, depth, visited):
     for f in nfanins[n]:
         dfs(f,depth-1,visited)
 
+
+def bfs(graph, start):
+    visited, queue = set(), [start]
+    while queue:
+        vertex = queue.pop(0)
+        if vertex not in visited:
+            visited.add(vertex)
+            queue.extend(graph[vertex] - visited)
+    return visited
+
+
 files = glob.glob(os.path.join(sys.argv[1], "*.bench"))
 for cnt, filename in enumerate(files):
     print(cnt+1," : ",filename)
@@ -77,8 +88,12 @@ for cnt, filename in enumerate(files):
 
 # Mark ZGAT and related nodes.
 visited = set()
-for z in zgats:
+'''for z in zgats:
     dfs(z,3,visited)
+    visited.remove(z)
+'''
+for z in zgats:
+    visited += [bfs(nfanins,z)]
     visited.remove(z)
 
 features_test, features_train, features_train_all = [], [], []
