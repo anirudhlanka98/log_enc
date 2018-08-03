@@ -116,7 +116,7 @@ for i in ntypes.keys():
     visited_bfs.extend(bfs(nfanins,i))
     visited_bfs.remove(i)
     for x in visited_bfs:
-        visited_type += ntypes[x]
+        visited_type.append(ntypes[x])
     if not include:
         c4 += 1
     elif tag[i] == 'test':
@@ -131,27 +131,27 @@ for i in ntypes.keys():
         #f = to_one_hot(0, 5) + to_one_hot(2, 3) + [0,0,0,1]
         #f = [0,2,0,0,0,1]
         f = [0,2]
-        f += visited_type
+        f.extend(visited_type)
     elif ntypes[i].upper() == 'NOT':
         #f = to_one_hot(1, 5) + to_one_hot(1, 3) + [1,1,0,0]
         #f = [1,1,1,1,0,0]
         f = [1,1]
-        f += visited_type
+        f.extend(visited_type)
     elif ntypes[i].upper() == 'INPUT':
         #f = to_one_hot(2, 5) + to_one_hot(0, 3) + [0,0,1,1]
         #f = [2,0,0,0,1,1]
         f = [2,0]
-        f += visited_type
+        f.extend(visited_type)
     elif ntypes[i].upper() == 'KEYINPUT':
         #f = to_one_hot(3, 5) + to_one_hot(0, 3) + [0,0,1,1]
         #f = [3,0,0,0,1,1]
         f = [3,0]
-        f += visited_type
+        f.extend(visited_type)
     else:
         #f = to_one_hot(4, 5) + to_one_hot(0, 3) + [0,0,0,0]
         #f = [4,0,0,0,0,0]
         f = [4,0]
-        f += visited_type
+        f.extend(visited_type)
 
     if i in zgats: 
         l = [1,0,0]
