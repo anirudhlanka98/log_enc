@@ -33,12 +33,13 @@ def dfs(n, depth, visited):
 def bfs(graph, root): 
     visited, queue = [], collections.deque([root])
     visited.append(root)
-    while queue: 
+    while queue:
         vertex = queue.popleft()
         for neighbour in graph[vertex]: 
             if neighbour not in visited: 
                 visited.append(neighbour) 
                 queue.append(neighbour)
+                #print(visited)
     return visited
 
 
@@ -115,6 +116,8 @@ for i in ntypes.keys():
     included_test = False
     visited_bfs.extend(bfs(nfanins,i))
     visited_bfs.remove(i)
+    visited_bfs.sort(reverse = True)
+    print(len(visited_bfs),'\n')
     for x in visited_bfs:
         visited_type.append(ntypes[x])
     if not include:
